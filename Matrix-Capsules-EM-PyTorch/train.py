@@ -202,13 +202,13 @@ def main():
     num_class, train_loader, test_loader = get_setting(args)
 
     # model
-    A, B, C, D = 64, 8, 16, 16 
+    A, B, C, D = 16, 16, 16, 16 
     # A, B, C, D = 32, 32, 32, 32
     model = capsules(A=A, B=B, C=C, D=D, E=10,
                      iters=args.em_iters).to(device)
 
     criterion = SpreadLoss(num_class=num_class, m_min=0.2, m_max=0.9)
-    optimizer = optim.SGD(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=1)
     
     best_acc = test(test_loader, model, criterion, device)
